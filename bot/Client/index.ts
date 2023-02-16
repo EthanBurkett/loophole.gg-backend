@@ -20,6 +20,7 @@ declare module "discord.js" {
     error: (...message: any[]) => void;
     cache: {
       prefixes: Collection<string, string>;
+      autoroles: AutoRole[];
     };
   }
 }
@@ -167,6 +168,7 @@ import {
 } from "discord.js";
 import mongoose from "mongoose";
 import CommandHandler from "./Handlers/commandHandler";
+import { AutoRole } from "../models/autorole.model";
 
 export interface CommandOptions {
   message: Message<boolean> | null;

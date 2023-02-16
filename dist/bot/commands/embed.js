@@ -193,7 +193,7 @@ exports.default = {
                         const fields = i.fields.fields.map((f) => f);
                         fields.map((f) => {
                             try {
-                                embed.data.color = (0, discord_js_1.resolveColor)(f.value);
+                                embed.data[f.customId] = (0, discord_js_1.resolveColor)(f.value);
                             }
                             catch (e) {
                                 i.reply({

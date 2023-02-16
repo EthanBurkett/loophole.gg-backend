@@ -6,7 +6,6 @@ const canvas_1 = require("canvas");
 exports.default = async (client) => {
     client.on("interactionCreate", async (interaction) => {
         var _a, _b, _c, _d;
-        console.log(interaction.user.username);
         if (!interaction.isButton() || !interaction.guild)
             return;
         if (interaction.customId === "verify_none") {

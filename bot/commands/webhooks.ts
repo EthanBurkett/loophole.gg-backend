@@ -103,7 +103,6 @@ export default {
     const subcommand = interaction.options.getSubcommand(true);
 
     if (subcommand === "create") {
-      console.log("test");
       const name = interaction.options.getString("name", true);
       const channel = interaction.options.getChannel(
         "channel",
@@ -138,11 +137,13 @@ export default {
         webhook: webhook.name,
         createdBy: interaction.user.id,
         webhookId: webhook.id,
+        url: webhook.url,
       });
 
       await webhookModel.save();
 
       return {
+        ephemeral: true,
         embeds: [
           new EmbedBuilder({
             title: "Webhook Created",
@@ -159,6 +160,10 @@ export default {
               {
                 name: "Channel",
                 value: `<#${channel.id}>`,
+              },
+              {
+                name: "Webhook URL",
+                value: webhook.url,
               },
             ],
           }),
@@ -194,6 +199,7 @@ export default {
 
       interaction
         .reply({
+          ephemeral: true,
           embeds: [
             new EmbedBuilder({
               title: "Webhook Info",
@@ -222,6 +228,10 @@ export default {
                   name: "Created At",
                   value: new Date(webhookModel[0].createdAt).toLocaleString(),
                   inline: true,
+                },
+                {
+                  name: "Webhook URL",
+                  value: webhookModel[0].url,
                 },
               ],
             }),

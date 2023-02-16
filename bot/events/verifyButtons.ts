@@ -11,7 +11,6 @@ import { createCanvas, loadImage } from "canvas";
 
 export default async (client: Client<boolean>) => {
   client.on("interactionCreate", async (interaction) => {
-    console.log(interaction.user.username);
     if (!interaction.isButton() || !interaction.guild) return;
     if (interaction.customId === "verify_none") {
       const user = interaction.user.id;

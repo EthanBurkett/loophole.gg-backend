@@ -9,6 +9,7 @@ export interface Webhook {
   webhookId: string;
   createdAt: Date;
   updatedAt: Date;
+  url: string;
 }
 
 const WebhookSchema = new Schema<Webhook>(
@@ -18,6 +19,7 @@ const WebhookSchema = new Schema<Webhook>(
     webhook: { type: String, required: true },
     createdBy: { type: String, required: true },
     webhookId: { type: String, required: true },
+    url: { type: String, required: true },
   },
   {
     timestamps: true,
