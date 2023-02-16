@@ -27,13 +27,13 @@ client.on("ready", async () => {
     const instance = new Client_1.default({
         client,
         bot: {
-            commandsDir: "./bot/commands",
+            commandsDir: "./dist/bot/commands",
             testServers: [
                 "1067602125099642912",
                 "1044794654882791455",
                 "1075530815557083306",
             ],
-            eventsPath: "./bot/events",
+            eventsPath: "./dist/bot/events",
         },
     });
     client.cache.autoroles = [];
