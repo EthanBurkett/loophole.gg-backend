@@ -15,14 +15,14 @@ router.get(
   }
 );
 
+router.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    console.log(err);
+  });
+  res.redirect(config.clientUrl);
+});
+
 router.get("/status", async (req, res) => {
-  // const user = (await client.guilds.cache
-  //   .get(config.Discord.guildId)
-  //   ?.members.fetch({ user: (req.user as any).discordID })
-  //   .catch(() => res.status(404).send({ error: "User not found" }))) as any;
-
-  // if (!user) res.status(404).send({ error: "User not found" });
-
   return req.user
     ? res.send(req.user)
     : res.status(401).json({ error: "Unauthorized" });

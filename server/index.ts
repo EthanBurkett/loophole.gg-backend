@@ -8,6 +8,7 @@ import "./strategies/discord";
 import global from "../!global";
 import session from "express-session";
 import store from "connect-mongo";
+import passport from "passport";
 
 const app = express();
 
@@ -35,6 +36,9 @@ app.use(
     store: new store({ mongoUrl: global.mongo }),
   })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/v2", routes);
 

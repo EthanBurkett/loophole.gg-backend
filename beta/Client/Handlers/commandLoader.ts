@@ -61,7 +61,6 @@ export default class CommandLoader {
       }
 
       this._commands.set(file.name[0], command);
-      console.log(this._commands);
     }
   }
 
