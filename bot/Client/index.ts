@@ -21,7 +21,6 @@ declare module "discord.js" {
     cache: {
       prefixes: Collection<string, string>;
     };
-    commands: Collection<string, Command>;
   }
 }
 

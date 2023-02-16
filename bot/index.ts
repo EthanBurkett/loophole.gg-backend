@@ -17,13 +17,13 @@ client.on("ready", () => {
   const instance = new CustomClient({
     client,
     bot: {
-      commandsDir: "./bot/commands",
+      commandsDir: "./beta/commands",
       testServers: [
         "1067602125099642912",
         "1044794654882791455",
         "1075530815557083306",
       ],
-      eventsPath: "./bot/events",
+      eventsPath: "./beta/events",
     },
   });
 
@@ -38,6 +38,6 @@ client.on("ready", () => {
   });
 });
 
-client.login(Config.Token);
+client.login(Config.BetaToken);
 
 export { client };

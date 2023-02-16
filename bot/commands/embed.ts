@@ -246,7 +246,7 @@ export default {
 
             fields.map((f) => {
               try {
-                embed.data.color = resolveColor(f.value as any);
+                (embed.data as any)[f.customId] = resolveColor(f.value as any);
               } catch (e) {
                 i.reply({
                   embeds: [

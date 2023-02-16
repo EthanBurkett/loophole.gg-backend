@@ -6,6 +6,9 @@ export interface Webhook {
   channelId: string;
   webhook: string;
   createdBy: string;
+  webhookId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const WebhookSchema = new Schema<Webhook>(
@@ -14,6 +17,7 @@ const WebhookSchema = new Schema<Webhook>(
     channelId: { type: String, required: true },
     webhook: { type: String, required: true },
     createdBy: { type: String, required: true },
+    webhookId: { type: String, required: true },
   },
   {
     timestamps: true,
