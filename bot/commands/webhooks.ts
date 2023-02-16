@@ -1,13 +1,11 @@
-import { client } from "../";
 import {
   ApplicationCommandOptionType,
   ChannelType,
-  EmbedBuilder,
   TextBasedChannel,
 } from "discord.js";
 import { Command, CommandType } from "../Client";
 import webhooksModel from "../models/webhooks.model";
-import { Colors } from "../!config";
+import { Colors, EmbedBuilder } from "../!config";
 
 export default {
   description: "Configure webhooks for this server",

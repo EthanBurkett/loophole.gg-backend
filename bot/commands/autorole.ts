@@ -1,5 +1,5 @@
-import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
-import { Colors } from "../!config";
+import { ApplicationCommandOptionType } from "discord.js";
+import { Colors, EmbedBuilder } from "../!config";
 import { Command, CommandType } from "../Client";
 import autoroleModel from "../models/autorole.model";
 

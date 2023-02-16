@@ -1,7 +1,6 @@
-import { Colors } from "../!config";
+import { Colors, EmbedBuilder } from "../!config";
 import {
   Client,
-  EmbedBuilder,
   AttachmentBuilder,
   TextBasedChannel,
   GuildMember,
