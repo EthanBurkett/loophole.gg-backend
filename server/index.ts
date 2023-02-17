@@ -1,14 +1,17 @@
 import express from "express";
-import { createServer } from "http";
+import https from "https";
+import http from "http";
 import chalk from "chalk";
 import cors from "cors";
 import routes from "./routes";
 import config from "./!config";
 import "./strategies/discord";
-import global from "../!global";
+import global, { Production } from "../!global";
 import session from "express-session";
 import store from "connect-mongo";
 import passport from "passport";
+import fs from "fs";
+import path from "path";
 
 const app = express();
 
@@ -40,8 +43,23 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/v2", routes);
+app.use(Production ? "/" : "/v2", routes);
 
-app.listen(config.port, () => {
-  console.log(chalk.green(`Server listening on port ${config.port}`));
+const sslServer = https.createServer(
+  {
+    key: fs.readFileSync(
+      path.join("/etc/letsencrypt/live/api.loophole.gg", "privkey.pem")
+    ),
+    cert: fs.readFileSync(
+      path.join("/etc/letsencrypt/live/api.loophole.gg", "cert.pem")
+    ),
+    ca: fs.readFileSync(
+      path.join("/etc/letsencrypt/live/api.loophole.gg", "chain.pem")
+    ),
+  },
+  app
+);
+
+sslServer.listen(443, () => {
+  console.log(chalk.green("API is listening on port 443"));
 });

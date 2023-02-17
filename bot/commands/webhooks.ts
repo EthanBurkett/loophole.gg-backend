@@ -33,31 +33,6 @@ export default {
       ],
     },
     {
-      name: "addcommand",
-      description: "Add a command to log to a webhook",
-      type: ApplicationCommandOptionType.Subcommand,
-      options: [
-        {
-          name: "command",
-          description: "Command to log",
-          type: ApplicationCommandOptionType.String,
-          required: true,
-        },
-        {
-          name: "channel",
-          description: "Channel to send webhook messages",
-          type: ApplicationCommandOptionType.Channel,
-          required: true,
-        },
-        {
-          name: "webhook",
-          description: "Webhook to log to",
-          type: ApplicationCommandOptionType.String,
-          required: true,
-        },
-      ],
-    },
-    {
       name: "info",
       description: "Get info about a webhook",
       type: ApplicationCommandOptionType.Subcommand,
