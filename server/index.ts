@@ -23,6 +23,7 @@ app.use(
       "https://loophole.gg",
       "https://www.loophole.gg",
       "http://localhost:3000",
+      "https://discord.com",
     ],
     credentials: true,
   })
@@ -34,6 +35,10 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
+      sameSite: false,
+      domain: Production ? "loophole.gg" : "localhost",
+      httpOnly: true,
+      secure: Production,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
     store: new store({ mongoUrl: global.mongo }),
