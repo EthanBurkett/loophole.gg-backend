@@ -47,6 +47,7 @@ app.use((0, cors_1.default)({
         "https://loophole.gg",
         "https://www.loophole.gg",
         "http://localhost:3000",
+        "https://discord.com",
     ],
     credentials: true,
 }));
@@ -55,6 +56,10 @@ app.use((0, express_session_1.default)({
     resave: false,
     saveUninitialized: false,
     cookie: {
+        sameSite: false,
+        domain: _global_1.Production ? "loophole.gg" : "localhost",
+        httpOnly: true,
+        secure: _global_1.Production,
         maxAge: 1000 * 60 * 60 * 24 * 7,
     },
     store: new connect_mongo_1.default({ mongoUrl: _global_1.default.mongo }),
@@ -62,11 +67,18 @@ app.use((0, express_session_1.default)({
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 app.use(_global_1.Production ? "/" : "/v2", routes_1.default);
-const sslServer = https_1.default.createServer({
-    key: fs_1.default.readFileSync(path_1.default.join("/etc/letsencrypt/live/api.loophole.gg", "privkey.pem")),
-    cert: fs_1.default.readFileSync(path_1.default.join("/etc/letsencrypt/live/api.loophole.gg", "cert.pem")),
-    ca: fs_1.default.readFileSync(path_1.default.join("/etc/letsencrypt/live/api.loophole.gg", "chain.pem")),
-}, app);
-sslServer.listen(443, () => {
-    console.log(chalk_1.default.green("API is listening on port 443"));
-});
+if (_global_1.Production) {
+    const sslServer = https_1.default.createServer({
+        key: fs_1.default.readFileSync(path_1.default.join("/etc/letsencrypt/live/api.loophole.gg", "privkey.pem")),
+        cert: fs_1.default.readFileSync(path_1.default.join("/etc/letsencrypt/live/api.loophole.gg", "cert.pem")),
+        ca: fs_1.default.readFileSync(path_1.default.join("/etc/letsencrypt/live/api.loophole.gg", "chain.pem")),
+    }, app);
+    sslServer.listen(443, () => {
+        console.log(chalk_1.default.green("API is listening on port 443"));
+    });
+}
+else {
+    app.listen(_config_1.default.port, () => {
+        console.log(chalk_1.default.green(`API is listening on port ${_config_1.default.port}`));
+    });
+}

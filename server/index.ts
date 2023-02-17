@@ -50,21 +50,27 @@ app.use(passport.session());
 
 app.use(Production ? "/" : "/v2", routes);
 
-const sslServer = https.createServer(
-  {
-    key: fs.readFileSync(
-      path.join("/etc/letsencrypt/live/api.loophole.gg", "privkey.pem")
-    ),
-    cert: fs.readFileSync(
-      path.join("/etc/letsencrypt/live/api.loophole.gg", "cert.pem")
-    ),
-    ca: fs.readFileSync(
-      path.join("/etc/letsencrypt/live/api.loophole.gg", "chain.pem")
-    ),
-  },
-  app
-);
+if (Production) {
+  const sslServer = https.createServer(
+    {
+      key: fs.readFileSync(
+        path.join("/etc/letsencrypt/live/api.loophole.gg", "privkey.pem")
+      ),
+      cert: fs.readFileSync(
+        path.join("/etc/letsencrypt/live/api.loophole.gg", "cert.pem")
+      ),
+      ca: fs.readFileSync(
+        path.join("/etc/letsencrypt/live/api.loophole.gg", "chain.pem")
+      ),
+    },
+    app
+  );
 
-sslServer.listen(443, () => {
-  console.log(chalk.green("API is listening on port 443"));
-});
+  sslServer.listen(443, () => {
+    console.log(chalk.green("API is listening on port 443"));
+  });
+} else {
+  app.listen(config.port, () => {
+    console.log(chalk.green(`API is listening on port ${config.port}`));
+  });
+}

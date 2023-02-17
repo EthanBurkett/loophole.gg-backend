@@ -41,6 +41,7 @@ passport.use(
           discordId,
           accessToken,
           refreshToken,
+          email: profile.email,
         });
         const savedUser = await newUser.save();
 

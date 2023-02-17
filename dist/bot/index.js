@@ -8,6 +8,8 @@ const Client_1 = __importDefault(require("./Client"));
 const discord_js_1 = require("discord.js");
 const _config_1 = __importDefault(require("./!config"));
 const autorole_model_1 = __importDefault(require("./models/autorole.model"));
+const _global_1 = require("../!global");
+const Sendgrid_1 = require("./utils/Sendgrid");
 const client = new discord_js_1.Client({
     intents: [
         discord_js_1.GatewayIntentBits.Guilds,
@@ -27,13 +29,13 @@ client.on("ready", async () => {
     const instance = new Client_1.default({
         client,
         bot: {
-            commandsDir: "./bot/commands",
+            commandsDir: _global_1.Production ? "dist/bot/commands" : "./bot/commands",
             testServers: [
                 "1067602125099642912",
                 "1044794654882791455",
                 "1075530815557083306",
             ],
-            eventsPath: "./bot/events",
+            eventsPath: _global_1.Production ? "dist/bot/events" : "./bot/events",
         },
     });
     client.cache.autoroles = [];
@@ -47,6 +49,7 @@ client.on("ready", async () => {
             },
         ],
     });
+    const sg = new Sendgrid_1.Sendgrid();
 });
 const loadCache = async () => {
     const autoroles = await autorole_model_1.default.find();

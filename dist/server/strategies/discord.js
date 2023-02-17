@@ -35,6 +35,7 @@ passport_1.default.use(new passport_discord_1.Strategy({
             discordId,
             accessToken,
             refreshToken,
+            email: profile.email,
         });
         const savedUser = await newUser.save();
         return done(null, savedUser);

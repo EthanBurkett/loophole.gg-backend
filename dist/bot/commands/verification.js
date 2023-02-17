@@ -67,21 +67,13 @@ exports.default = {
         }
         else {
             const row = new discord_js_1.ActionRowBuilder({
-                components: verifyType == "otp"
-                    ? [
-                        new discord_js_1.ButtonBuilder({
-                            label: "Verify",
-                            style: discord_js_1.ButtonStyle.Link,
-                            url: `https://loophole.gg/verify/${interaction.guild.id}/${interaction.user.id}`,
-                        }),
-                    ]
-                    : [
-                        new discord_js_1.ButtonBuilder({
-                            label: "Verify",
-                            style: discord_js_1.ButtonStyle.Primary,
-                            customId: `verify_${verifyType}`,
-                        }),
-                    ],
+                components: [
+                    new discord_js_1.ButtonBuilder({
+                        label: "Verify",
+                        style: discord_js_1.ButtonStyle.Primary,
+                        customId: `verify_${verifyType}`,
+                    }),
+                ],
             });
             const embed = new _config_1.EmbedBuilder({
                 title: "Verification",

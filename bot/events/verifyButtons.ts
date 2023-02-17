@@ -5,8 +5,16 @@ import {
   TextBasedChannel,
   GuildMember,
   Message,
+  ChannelType,
+  GuildInvitableChannelResolvable,
+  Invite,
 } from "discord.js";
+import fs from "fs";
 import { createCanvas, loadImage } from "canvas";
+import { Production } from "../../!global";
+import path from "path";
+import { Sendgrid } from "../utils/Sendgrid";
+import userModel from "../../server/models/user.model";
 
 export default async (client: Client<boolean>) => {
   client.on("interactionCreate", async (interaction) => {
@@ -29,8 +37,7 @@ export default async (client: Client<boolean>) => {
         ],
         ephemeral: true,
       });
-    }
-    if (interaction.customId === "verify_captcha") {
+    } else if (interaction.customId === "verify_captcha") {
       const user = interaction.user.id;
       const member = interaction.guild?.members.cache.get(user);
       if (!member) return;
@@ -103,6 +110,159 @@ export default async (client: Client<boolean>) => {
                 .catch(() => {});
             }
           });
+        });
+    } else if (interaction.customId === "verify_otp") {
+      // generate a random string 6 characters long
+      const verificationCode = Math.random()
+        .toString(36)
+        .substring(2, 8)
+        .toUpperCase();
+
+      // create an invite
+      const invite: Invite | void = await interaction.guild?.invites
+        .create(interaction.channel as GuildInvitableChannelResolvable, {
+          maxAge: 0,
+          maxUses: 1,
+          unique: true,
+          reason: "Verification",
+        })
+        .catch(() => {});
+      if (!invite) {
+        interaction.reply({
+          ephemeral: true,
+          embeds: [
+            new EmbedBuilder({
+              title: "Error",
+              description: "Unable to create an invite.",
+              color: Colors.error,
+            }),
+          ],
+        });
+        return;
+      }
+
+      const sendgrid = new Sendgrid();
+
+      const user = await userModel.findOne({
+        discordId: interaction.user.id,
+      });
+
+      if (!user) {
+        interaction.reply({
+          ephemeral: true,
+          embeds: [
+            new EmbedBuilder({
+              title: "Click here to login",
+              description:
+                "Please login to the dashboard to continue verification.",
+              color: Colors.error,
+              url: `https://api.loophole.gg/auth/discord`,
+            }),
+          ],
+        });
+      }
+
+      const member = interaction.guild?.members.cache.get(interaction.user.id)!;
+
+      sendgrid
+        .sendOTP(user?.email!, {
+          code: verificationCode,
+          discordinvite: invite.url,
+          guildname: interaction.guild.name,
+        })
+        .then(() => {
+          member
+            .send({
+              embeds: [
+                new EmbedBuilder({
+                  title: "E-Mail OTP Verification",
+                  description: `You have been sent an email at \`${
+                    user!.email
+                  }\`. Please respond within 2 minutes with the code you see in the email.`,
+                  color: Colors.info,
+                }),
+              ],
+            })
+            .catch(() => {
+              interaction.reply({
+                ephemeral: true,
+                embeds: [
+                  new EmbedBuilder({
+                    title: "Error",
+                    description: "Unable to send you a DM.",
+                    color: Colors.error,
+                  }),
+                ],
+              });
+            })
+            .then((m) => {
+              if (!m) return;
+              interaction
+                .reply({
+                  embeds: [
+                    new EmbedBuilder({
+                      title: "Verification",
+                      description: `Please check your DMs to continue verification.`,
+                      color: Colors.info,
+                    }),
+                  ],
+                  ephemeral: true,
+                })
+                .catch(() => {});
+
+              const collector = m.channel.createMessageCollector({
+                time: 120 * 1000,
+                max: 1,
+                filter: (msg) => msg.author.id === member.user!.id,
+              });
+
+              collector.on("collect", async (msg) => {
+                if (
+                  msg.content.toLowerCase() === verificationCode.toLowerCase()
+                ) {
+                  const role = interaction.guild?.roles.cache.find(
+                    (r) => r.name.toLowerCase() === "verified"
+                  );
+                  if (!role) return;
+                  await member.roles.add(role).catch((e) => client.error(e));
+                  await msg
+                    .reply({
+                      embeds: [
+                        new EmbedBuilder({
+                          title: "Successfully verified",
+                          color: Colors.success,
+                        }),
+                      ],
+                    })
+                    .catch(() => {});
+                } else {
+                  await msg
+                    .reply({
+                      embeds: [
+                        new EmbedBuilder({
+                          title: "Verification failed",
+                          color: Colors.error,
+                        }),
+                      ],
+                    })
+                    .catch(() => {});
+                }
+              });
+
+              collector.on("end", (collected, reason) => {
+                if (reason === "time") {
+                  m.reply({
+                    embeds: [
+                      new EmbedBuilder({
+                        title: "Verification failed",
+                        description: "You took too long to respond.",
+                        color: Colors.error,
+                      }),
+                    ],
+                  }).catch(() => {});
+                }
+              });
+            });
         });
     }
   });

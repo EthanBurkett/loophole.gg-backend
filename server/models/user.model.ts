@@ -4,6 +4,7 @@ export interface User {
   discordId: string;
   accessToken: string;
   refreshToken: string;
+  email: string;
 }
 
 const UserSchema = new Schema<User>({
@@ -17,6 +18,10 @@ const UserSchema = new Schema<User>({
     required: true,
   },
   refreshToken: {
+    type: String,
+    required: true,
+  },
+  email: {
     type: String,
     required: true,
   },

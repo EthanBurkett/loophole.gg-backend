@@ -76,24 +76,13 @@ export default {
         });
     } else {
       const row = new ActionRowBuilder<ButtonBuilder>({
-        components:
-          verifyType == "otp"
-            ? [
-                new ButtonBuilder({
-                  label: "Verify",
-                  style: ButtonStyle.Link,
-                  url: `https://loophole.gg/verify/${interaction.guild!.id}/${
-                    interaction.user!.id
-                  }`,
-                }),
-              ]
-            : [
-                new ButtonBuilder({
-                  label: "Verify",
-                  style: ButtonStyle.Primary,
-                  customId: `verify_${verifyType}`,
-                }),
-              ],
+        components: [
+          new ButtonBuilder({
+            label: "Verify",
+            style: ButtonStyle.Primary,
+            customId: `verify_${verifyType}`,
+          }),
+        ],
       });
 
       const embed = new EmbedBuilder({
