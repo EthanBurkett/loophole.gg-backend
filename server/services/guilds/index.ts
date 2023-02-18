@@ -82,9 +82,10 @@ export async function getMutualGuildsService(id: string) {
 }
 
 export function getGuildService(id: string) {
-  return axios.get(`${DiscordApiUrl}/guilds/${id}`, {
-    headers: {
-      Authorization: `Bot ${BotConfig.Token}`,
-    },
-  });
+  return client.guilds.cache.get(id);
+  // return axios.get(`${DiscordApiUrl}/guilds/${id}`, {
+  //   headers: {
+  //     Authorization: `Bot ${BotConfig.Token}`,
+  //   },
+  // });
 }

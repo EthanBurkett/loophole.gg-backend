@@ -37,7 +37,7 @@ export async function getGuildPermissionsController(
 export async function getGuildController(req: Request, res: Response) {
   const { id } = req.params;
   try {
-    const { data: guild } = await getGuildService(id);
+    const guild = await getGuildService(id);
     res.send(guild);
   } catch (e) {
     console.error(e);

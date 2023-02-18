@@ -54,10 +54,6 @@ async function getMutualGuildsService(id) {
 }
 exports.getMutualGuildsService = getMutualGuildsService;
 function getGuildService(id) {
-    return axios_1.default.get(`${constants_1.DiscordApiUrl}/guilds/${id}`, {
-        headers: {
-            Authorization: `Bot ${_config_1.default.Token}`,
-        },
-    });
+    return bot_1.client.guilds.cache.get(id);
 }
 exports.getGuildService = getGuildService;
