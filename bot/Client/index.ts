@@ -1,4 +1,5 @@
 import {
+  APIGuild,
   ChatInputCommandInteraction,
   Client,
   Collection,
@@ -21,6 +22,7 @@ declare module "discord.js" {
     cache: {
       prefixes: Collection<string, string>;
       autoroles: AutoRole[];
+      guilds: Collection<string, APIGuild>;
     };
   }
 }
@@ -50,6 +52,7 @@ export default class CustomClient {
 
     this._settings.client.cache = {
       prefixes: new Collection(),
+      guilds: new Collection(),
     };
 
     if (this._settings.mongo) {

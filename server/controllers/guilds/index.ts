@@ -5,6 +5,8 @@ import {
   getMutualGuildsService,
 } from "../../services/guilds";
 import { User } from "../../models/user.model";
+import { client } from "../../../bot";
+import { APIGuild } from "discord.js";
 
 export async function getGuildsController(req: Request, res: Response) {
   const user = req.user as User;
@@ -34,11 +36,22 @@ export async function getGuildPermissionsController(
   }
 }
 
+export async function getGuild(id) {
+  if (client.cache.guilds.has(id)) return client.cache.guilds.get(id);
+  try {
+    const guild = await getGuildService(id);
+    client.cache.guilds.set(id, guild as any);
+    return guild;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export async function getGuildController(req: Request, res: Response) {
   const { id } = req.params;
   try {
-    const guild = await getGuildService(id);
-    res.send(guild);
+    const guild = await getGuild(id);
+    return res.send(guild);
   } catch (e) {
     console.error(e);
     res.status(400).send({ msg: "Error" });
